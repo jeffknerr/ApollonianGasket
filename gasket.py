@@ -14,8 +14,10 @@ import math
 import cmath
 from matplotlib.patches import Circle
 from matplotlib.collections import PatchCollection
+from matplotlib import cm
 import matplotlib.pyplot as plt
 import circles
+import numpy as np
 
 
 def main():
@@ -92,6 +94,7 @@ def plot(allcircles):
     ax.set_xlim(-1, 1)
     ax.set_ylim(-1, 1)
     ax.grid(True)
+    ax.set_aspect(1)
 
     for key in allcircles:
         cobj = allcircles[key]
@@ -100,9 +103,14 @@ def plot(allcircles):
         radius = cobj.getR()
         circle = Circle((x, y), radius)
         patches.append(circle)
-
-    p = PatchCollection(patches, alpha=0.4)
-    ax.add_collection(p)
+    colors = np.linspace(0, 1, len(patches))
+    collection = PatchCollection(patches,
+                                 cmap=cm.get_cmap('gist_ncar'),
+                                 alpha=0.7)
+    collection.set_array(colors)
+    ax.add_collection(collection)
+#   p = PatchCollection(patches, color='red', alpha=0.4)
+#   ax.add_collection(p)
     plt.show()
 
 
