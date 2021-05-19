@@ -24,7 +24,7 @@ def main():
     """apollonian gasket code"""
     # recursion control...
     level = 0
-    maxdepth = 4
+    maxdepth = 5
     # store all circles, plot at the end
     allcircles = {}
     # first circle C1 that surrounds all the others
@@ -66,6 +66,10 @@ def solve(a, A, b, B, c, C, level, maxdepth, allcircles):
     # 4 possible solutions, only two of them are tangent to original 3
     # checkAll(A,a,B,b,C,c,dp,dm,Dplus,Dminus)
     # find/add two new ones to dictionary by doing tangent checks...
+    print("level:", level)
+    printc("ABC:",A,a,B,b,C,c)
+    printc("pp,mp,pm,mm:",Dplus,dp,Dminus,dp,Dplus,dm,Dminus,dm)
+#   input()
     for d,D in [(dp,Dplus),(dp,Dminus),(dm,Dplus),(dm,Dminus)]:
         if not tangent(a,A,b,B,c,C,d,D):
             pass  # don't include this solution....don't recur on it
@@ -75,7 +79,6 @@ def solve(a, A, b, B, c, C, level, maxdepth, allcircles):
             Cobj = mycircles.Circle(Dx, Dy, 1/d)
             if hash(Cobj) not in allcircles:
                 allcircles[hash(Cobj)] = Cobj
-            else:
                 level = level + 1
                 # recur on 3 new possibilities
                 solve(a, A, b, B, d, D, level, maxdepth, allcircles)
@@ -83,7 +86,7 @@ def solve(a, A, b, B, c, C, level, maxdepth, allcircles):
                 solve(c, C, b, B, d, D, level, maxdepth, allcircles)
 
 
-def printc(text,X,x,Y,y,Z,z):
+def printc(text,X,x,Y,y,Z,z,W=(99+99j),w=99):
     """print circle details"""
     xi = (X/x).imag
     xr = (X/x).real
@@ -91,9 +94,14 @@ def printc(text,X,x,Y,y,Z,z):
     yr = (Y/y).real
     zi = (Z/z).imag
     zr = (Z/z).real
-    print("%s: %5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f" %
+    wi = (W/w).imag
+    wr = (W/w).real
+    if w==99:
+        print("%s: %5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f" %
             (text,xr,xi,1/x,yr,yi,1/y,zr,zi,1/z))
-
+    else:
+        print("%s: %5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f" %
+            (text,xr,xi,1/x,yr,yi,1/y,zr,zi,1/z,wr,wi,1/w))
 
 
 def plot(allcircles):
@@ -112,7 +120,8 @@ def plot(allcircles):
         radius = cobj.getR()
         circle = Circle((x, y), radius)
         patches.append(circle)
-    colors = np.linspace(0, 1, len(patches))
+    colors = np.linspace(0, 1, 0.2*len(patches))
+    # color them based on level? x? radius?
     collection = PatchCollection(patches,
                                  cmap=cm.get_cmap('gist_ncar'),
                                  alpha=0.7)
