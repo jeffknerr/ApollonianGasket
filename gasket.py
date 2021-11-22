@@ -17,10 +17,13 @@ from matplotlib.collections import PatchCollection
 from matplotlib import cm
 import matplotlib.pyplot as plt
 import mycircles
+import random
 import numpy as np
+import click
 
-
-def main():
+@click.command()
+@click.option("--x2", default=0.3, help="x coordinate of circle #2 (e.g., 0.3 or 0.5)")
+def main(x2):
     """apollonian gasket code"""
     # recursion control...
     level = 0
@@ -36,7 +39,7 @@ def main():
     allcircles[hash(Cobj)] = Cobj
     # for second circle C2, let user pick x location such that 0>x2<1
     y2 = 0
-    x2 = getx("x2", 0, 1)
+    #x2 = getx("x2", 0, 1)
     r2 = 1 - x2
     b = 1/r2
     Cobj = mycircles.Circle(x2, y2, r2)
@@ -66,9 +69,9 @@ def solve(a, A, b, B, c, C, level, maxdepth, allcircles):
     # 4 possible solutions, only two of them are tangent to original 3
     # checkAll(A,a,B,b,C,c,dp,dm,Dplus,Dminus)
     # find/add two new ones to dictionary by doing tangent checks...
-    print("level:", level)
-    printc("ABC:",A,a,B,b,C,c)
-    printc("pp,mp,pm,mm:",Dplus,dp,Dminus,dp,Dplus,dm,Dminus,dm)
+#   print("level:", level)
+#   printc("ABC:",A,a,B,b,C,c)
+#   printc("pp,mp,pm,mm:",Dplus,dp,Dminus,dp,Dplus,dm,Dminus,dm)
 #   input()
     for d,D in [(dp,Dplus),(dp,Dminus),(dm,Dplus),(dm,Dminus)]:
         if not tangent(a,A,b,B,c,C,d,D):
@@ -110,7 +113,7 @@ def plot(allcircles):
     patches = []
     ax.set_xlim(-1, 1)
     ax.set_ylim(-1, 1)
-    ax.grid(True)
+    ax.grid(False)
     ax.set_aspect(1)
 
     for key in allcircles:
@@ -120,15 +123,11 @@ def plot(allcircles):
         radius = cobj.getR()
         circle = Circle((x, y), radius)
         patches.append(circle)
-    colors = np.linspace(0, 1, 0.2*len(patches))
-    # color them based on level? x? radius?
-    collection = PatchCollection(patches,
-                                 cmap=cm.get_cmap('gist_ncar'),
+    mycolors = ["red","green","blue","yellow","pink","orange"]
+    collection = PatchCollection(patches, edgecolor="black", 
+                                 facecolor=mycolors,
                                  alpha=0.7)
-    collection.set_array(colors)
     ax.add_collection(collection)
-#   p = PatchCollection(patches, color='red', alpha=0.4)
-#   ax.add_collection(p)
     plt.show()
 
 
