@@ -14,20 +14,18 @@ import math
 import cmath
 from matplotlib.patches import Circle
 from matplotlib.collections import PatchCollection
-from matplotlib import cm
 import matplotlib.pyplot as plt
 import mycircles
-import random
-import numpy as np
 import click
 
 @click.command()
 @click.option("--x2", default=0.3, help="x coordinate of circle #2 (e.g., 0.3 or 0.5)")
-def main(x2):
+@click.option("--maxdepth", default=4, help="max recursion depth (e.g., 3, 7, 2)")
+def main(x2,maxdepth):
     """apollonian gasket code"""
     # recursion control...
     level = 0
-    maxdepth = 5
+    #maxdepth = 5
     # store all circles, plot at the end
     allcircles = {}
     # first circle C1 that surrounds all the others
@@ -115,18 +113,24 @@ def plot(allcircles):
     ax.set_ylim(-1, 1)
     ax.grid(False)
     ax.set_aspect(1)
+    ax.set_title("Apollonian Gasket")
 
-    for key in allcircles:
+    # sort keys based on circle radius, so we can plot largest first
+    keys = mysort(allcircles)
+    keys.reverse() 
+    for key in keys[0:len(keys)-2]:    # remove duplicates???
         cobj = allcircles[key]
+#       print(cobj)
+# todo: why are there similar circles in the list??? (0,0,-1) <-- 3 of these??
         x = cobj.getX()
         y = cobj.getY()
         radius = cobj.getR()
         circle = Circle((x, y), radius)
         patches.append(circle)
-    mycolors = ["red","green","blue","yellow","pink","orange"]
+    mycolors = ["red","green","blue","cyan","pink","orange"]
     collection = PatchCollection(patches, edgecolor="black", 
                                  facecolor=mycolors,
-                                 alpha=0.7)
+                                 alpha=0.5)
     ax.add_collection(collection)
     plt.show()
 
@@ -203,6 +207,25 @@ def checkAll(A,a,B,b,C,c,dp,dm,Dplus,Dminus):
     print("Dmdp: ", tangent(a,A,b,B,c,C,dm,Dplus))
     print("Dmdm: ", tangent(a,A,b,B,c,C,dm,Dminus))
     print("-"*20)
+
+
+def mysort(allcircles):
+    """return keys, sorted by circle radius (largest first)"""
+    # note: need to do my own sort, since the Circle objects already
+    # have an __eq__ method that is not related to radius...
+    keys = list(allcircles.keys())
+    values = list(allcircles.values())
+    for i in range(1,len(keys)):
+        key = keys[i]                # save current key
+        value = values[i]            # save current value
+        posn = i
+        while posn > 0 and value.getR() > values[posn-1].getR():
+            values[posn] = values[posn-1]  # move item right one position 
+            keys[posn] = keys[posn-1] 
+            posn = posn - 1
+        values[posn] = value     # put it back at the end, in correct spot
+        keys[posn] = key         # put it back at the end, in correct spot
+    return keys
 
 
 main()
