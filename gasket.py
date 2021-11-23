@@ -18,14 +18,17 @@ import matplotlib.pyplot as plt
 import mycircles
 import click
 
+
 @click.command()
-@click.option("--x2", default=0.3, help="x coordinate of circle #2 (e.g., 0.3 or 0.5)")
-@click.option("--maxdepth", default=4, help="max recursion depth (e.g., 3, 7, 2)")
-def main(x2,maxdepth):
+@click.option("--x2", default=0.3,
+              help="x coordinate of circle #2 (e.g., 0.3 or 0.5)")
+@click.option("--maxdepth", default=4,
+              help="max recursion depth (e.g., 3, 7, 2)")
+def main(x2, maxdepth):
     """apollonian gasket code"""
     # recursion control...
     level = 0
-    #maxdepth = 5
+    # maxdepth = 5
     # store all circles, plot at the end
     allcircles = {}
     # first circle C1 that surrounds all the others
@@ -37,7 +40,7 @@ def main(x2,maxdepth):
     allcircles[hash(Cobj)] = Cobj
     # for second circle C2, let user pick x location such that 0>x2<1
     y2 = 0
-    #x2 = getx("x2", 0, 1)
+    # x2 = getx("x2", 0, 1)
     r2 = 1 - x2
     b = 1/r2
     Cobj = mycircles.Circle(x2, y2, r2)
@@ -71,8 +74,8 @@ def solve(a, A, b, B, c, C, level, maxdepth, allcircles):
 #   printc("ABC:",A,a,B,b,C,c)
 #   printc("pp,mp,pm,mm:",Dplus,dp,Dminus,dp,Dplus,dm,Dminus,dm)
 #   input()
-    for d,D in [(dp,Dplus),(dp,Dminus),(dm,Dplus),(dm,Dminus)]:
-        if not tangent(a,A,b,B,c,C,d,D):
+    for d, D in [(dp, Dplus),  (dp, Dminus), (dm, Dplus), (dm, Dminus)]:
+        if not tangent(a, A, b, B, c, C, d, D):
             pass  # don't include this solution....don't recur on it
         else:
             Dx = D.real/d
@@ -87,7 +90,7 @@ def solve(a, A, b, B, c, C, level, maxdepth, allcircles):
                 solve(c, C, b, B, d, D, level, maxdepth, allcircles)
 
 
-def printc(text,X,x,Y,y,Z,z,W=(99+99j),w=99):
+def printc(text, X, x, Y, y, Z, z, W=(99+99j), w=99):
     """print circle details"""
     xi = (X/x).imag
     xr = (X/x).real
@@ -97,12 +100,12 @@ def printc(text,X,x,Y,y,Z,z,W=(99+99j),w=99):
     zr = (Z/z).real
     wi = (W/w).imag
     wr = (W/w).real
-    if w==99:
-        print("%s: %5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f" %
-            (text,xr,xi,1/x,yr,yi,1/y,zr,zi,1/z))
+    if w == 99:
+        print("%s: %5.2f, %5.2f %5.2f |%5.2f, %5.2f %5.2f |%5.2f, %5.2f %5.2f" %
+              (text, xr, xi, 1/x, yr, yi, 1/y, zr, zi, 1/z))
     else:
-        print("%s: %5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f |%5.2f,%5.2f %5.2f" %
-            (text,xr,xi,1/x,yr,yi,1/y,zr,zi,1/z,wr,wi,1/w))
+        print("%s: %5.2f, %5.2f %5.2f |%5.2f, %5.2f %5.2f |%5.2f, %5.2f %5.2f |%5.2f, %5.2f %5.2f" %
+              (text, xr, xi, 1/x, yr, yi, 1/y, zr, zi, 1/z, wr, wi, 1/w))
 
 
 def plot(allcircles):
@@ -117,7 +120,7 @@ def plot(allcircles):
 
     # sort keys based on circle radius, so we can plot largest first
     keys = mysort(allcircles)
-    keys.reverse() 
+    keys.reverse()
     for key in keys[0:len(keys)-2]:    # remove duplicates???
         cobj = allcircles[key]
 #       print(cobj)
@@ -127,10 +130,10 @@ def plot(allcircles):
         radius = cobj.getR()
         circle = Circle((x, y), radius)
         patches.append(circle)
-    mycolors = ["red","green","blue","cyan","pink","orange"]
-    collection = PatchCollection(patches, edgecolor="black", 
+    mycolors = ["red", "green", "blue", "cyan", "pink", "orange"]
+    collection = PatchCollection(patches, edgecolor="black",
                                  facecolor=mycolors,
-                                 alpha=0.5)
+                                 alpha=0.2)
     ax.add_collection(collection)
     plt.show()
 
@@ -177,14 +180,14 @@ def descartes(a, b, c):
         return None
 
 
-def tangent(a,A,b,B,c,C,d,D):
+def tangent(a, A, b, B, c, C, d, D):
     """return True if circles are all tangent to each other"""
-    return twoTangent(a,A,d,D) and \
-           twoTangent(b,B,d,D) and \
-           twoTangent(c,C,d,D)
+    return twoTangent(a, A, d, D) and \
+        twoTangent(b, B, d, D) and \
+        twoTangent(c, C, d, D)
 
 
-def twoTangent(a,A,b,B):
+def twoTangent(a, A, b, B):
     """return True if two circles are tangent"""
     r1 = abs(1/a)
     r2 = abs(1/b)
@@ -200,12 +203,12 @@ def twoTangent(a,A,b,B):
     return (diff1 <= epsilon) or (diff2 <= epsilon)
 
 
-def checkAll(A,a,B,b,C,c,dp,dm,Dplus,Dminus):
+def checkAll(A, a, B, b, C, c, dp, dm, Dplus, Dminus):
     """check which ones are tangent"""
-    print("Dpdp: ", tangent(a,A,b,B,c,C,dp,Dplus))
-    print("Dpdm: ", tangent(a,A,b,B,c,C,dp,Dminus))
-    print("Dmdp: ", tangent(a,A,b,B,c,C,dm,Dplus))
-    print("Dmdm: ", tangent(a,A,b,B,c,C,dm,Dminus))
+    print("Dpdp: ", tangent(a, A, b, B, c, C, dp, Dplus))
+    print("Dpdm: ", tangent(a, A, b, B, c, C, dp, Dminus))
+    print("Dmdp: ", tangent(a, A, b, B, c, C, dm, Dplus))
+    print("Dmdm: ", tangent(a, A, b, B, c, C, dm, Dminus))
     print("-"*20)
 
 
@@ -215,13 +218,13 @@ def mysort(allcircles):
     # have an __eq__ method that is not related to radius...
     keys = list(allcircles.keys())
     values = list(allcircles.values())
-    for i in range(1,len(keys)):
+    for i in range(1, len(keys)):
         key = keys[i]                # save current key
         value = values[i]            # save current value
         posn = i
         while posn > 0 and value.getR() > values[posn-1].getR():
-            values[posn] = values[posn-1]  # move item right one position 
-            keys[posn] = keys[posn-1] 
+            values[posn] = values[posn-1]  # move item right one position
+            keys[posn] = keys[posn-1]
             posn = posn - 1
         values[posn] = value     # put it back at the end, in correct spot
         keys[posn] = key         # put it back at the end, in correct spot
