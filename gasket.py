@@ -226,8 +226,15 @@ def plot(allcircles):
         circle = Circle((x, y), radius)
         patches.append(circle)
     mycolors = ["red", "green", "blue", "cyan", "pink", "orange"]
+    blues = [ "LightSlateGrey", "grey", "LightGrey",
+"LightGray", "MidnightBlue", "navy",
+"CornflowerBlue", "DarkSlateBlue", "SlateBlue", "MediumSlateBlue",
+"MediumBlue", "RoyalBlue", "blue",
+"DodgerBlue", "DeepSkyBlue", "SkyBlue", "LightSkyBlue",
+"SteelBlue", "LightSteelBlue", "LightBlue", "PowderBlue",
+            ]
     collection = PatchCollection(patches, edgecolor="black",
-                                 facecolor=mycolors,
+                                 facecolor=blues,
                                  alpha=1.0)
     ax.add_collection(collection)
     plt.show()
