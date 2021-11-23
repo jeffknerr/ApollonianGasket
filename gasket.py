@@ -77,6 +77,8 @@ def solve(a, A, b, B, c, C, level, maxdepth, allcircles):
     for d, D in [(dp, Dplus),  (dp, Dminus), (dm, Dplus), (dm, Dminus)]:
         if not tangent(a, A, b, B, c, C, d, D):
             pass  # don't include this solution....don't recur on it
+        elif d < 0:
+            pass  # don't allow negative radii ???
         else:
             Dx = D.real/d
             Dy = D.imag/d
@@ -106,36 +108,6 @@ def printc(text, X, x, Y, y, Z, z, W=(99+99j), w=99):
     else:
         print("%s: %5.2f, %5.2f %5.2f |%5.2f, %5.2f %5.2f |%5.2f, %5.2f %5.2f |%5.2f, %5.2f %5.2f" %
               (text, xr, xi, 1/x, yr, yi, 1/y, zr, zi, 1/z, wr, wi, 1/w))
-
-
-def plot(allcircles):
-    """plot the circles"""
-    fig, ax = plt.subplots()
-    patches = []
-    ax.set_xlim(-1, 1)
-    ax.set_ylim(-1, 1)
-    ax.grid(False)
-    ax.set_aspect(1)
-    ax.set_title("Apollonian Gasket")
-
-    # sort keys based on circle radius, so we can plot largest first
-    keys = mysort(allcircles)
-    keys.reverse()
-    for key in keys[0:len(keys)-2]:    # remove duplicates???
-        cobj = allcircles[key]
-#       print(cobj)
-# todo: why are there similar circles in the list??? (0,0,-1) <-- 3 of these??
-        x = cobj.getX()
-        y = cobj.getY()
-        radius = cobj.getR()
-        circle = Circle((x, y), radius)
-        patches.append(circle)
-    mycolors = ["red", "green", "blue", "cyan", "pink", "orange"]
-    collection = PatchCollection(patches, edgecolor="black",
-                                 facecolor=mycolors,
-                                 alpha=0.2)
-    ax.add_collection(collection)
-    plt.show()
 
 
 def getx(prompt, minx, maxx):
@@ -229,6 +201,36 @@ def mysort(allcircles):
         values[posn] = value     # put it back at the end, in correct spot
         keys[posn] = key         # put it back at the end, in correct spot
     return keys
+
+
+def plot(allcircles):
+    """plot the circles"""
+    fig, ax = plt.subplots()
+    patches = []
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(-1, 1)
+    ax.grid(False)
+    ax.set_aspect(1)
+    ax.set_title("Apollonian Gasket")
+
+    # sort keys based on circle radius, so we can plot largest first
+    keys = mysort(allcircles)
+#   keys.reverse()
+    for key in keys[0:len(keys) - 1]:    # remove duplicates???
+        cobj = allcircles[key]
+        print(cobj)
+# todo: why are there similar circles in the list??? (0,0,-1) <-- 3 of these??
+        x = cobj.getX()
+        y = cobj.getY()
+        radius = cobj.getR()
+        circle = Circle((x, y), radius)
+        patches.append(circle)
+    mycolors = ["red", "green", "blue", "cyan", "pink", "orange"]
+    collection = PatchCollection(patches, edgecolor="black",
+                                 facecolor=mycolors,
+                                 alpha=1.0)
+    ax.add_collection(collection)
+    plt.show()
 
 
 main()

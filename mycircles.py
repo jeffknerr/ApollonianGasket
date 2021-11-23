@@ -44,10 +44,15 @@ def main():
     print(C1)
     C2 = Circle(0.5,2.6,8)
     print(C2)
+    x = 1.0
+    y = 2
+    r = 4.0
     C3 = Circle(1.0,2,4.0)
     print(C3)
-    assert(C1==C3)
-    print(C3.getX(), C3.getY(), C3.getR())
+    assert(C1 == C3)
+    assert(C3.getX() == x)
+    assert(C3.getY() == y)
+    assert(C3.getR() == r)
     print("all tests passed!")
 
 
