@@ -52,3 +52,9 @@ given C, B, D, find next tangent circle to those three
 ```
 - keep going until some max level of recursion is reached (e.g., 7)
 - save all circles as you go, plot them at the end
+
+## still to do
+
+- add bend numbers to center of each circle
+- figure out better way to not include duplicates (e.g., avoid adding 
+x=1.77e-15, y=0, r=0.99999 since it's really just the same as circle #1)
