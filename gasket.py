@@ -26,7 +26,9 @@ import click
               help="max recursion depth (e.g., 3, 7, 2)")
 @click.option("--palette", default="blues",
               help="rainbow|blues|greys palette")
-def main(x2, maxdepth, palette):
+@click.option("--nums", is_flag=True, default=False,
+              help="add bend numbers to image")
+def main(x2, maxdepth, palette, nums):
     """apollonian gasket code"""
     # recursion control...
     level = 0
@@ -59,7 +61,7 @@ def main(x2, maxdepth, palette):
     B = b*(x2+y2*1j)
     C = c*(x3+y3*1j)
     solve(a, A, b, B, c, C, level, maxdepth, allcircles)
-    plot(allcircles, palette)
+    plot(allcircles, palette, nums)
 
 
 def solve(a, A, b, B, c, C, level, maxdepth, allcircles):
@@ -156,12 +158,14 @@ def twoTangent(a, A, b, B):
     return (diff1 <= epsilon) or (diff2 <= epsilon)
 
 
-def plot(allcircles, palette):
+def plot(allcircles, palette, nums):
     """plot the circles"""
     fig, ax = plt.subplots()
     patches = []
-    ax.set_xlim(-1, 1)
-    ax.set_ylim(-1, 1)
+    minplot = -1
+    maxplot = 1
+    ax.set_xlim(minplot, maxplot)
+    ax.set_ylim(minplot, maxplot)
     ax.grid(False)
     ax.set_aspect(1)
     ax.set_title("Apollonian Gasket")
@@ -193,6 +197,16 @@ def plot(allcircles, palette):
                                  facecolor=palette,
                                  alpha=1.0)
     ax.add_collection(collection)
+    if nums:
+        minr = (maxplot - minplot)/20
+        for key in allcircles:
+            cobj = allcircles[key]
+            x = cobj.getX()
+            y = cobj.getY()
+            radius = cobj.getR()
+            if radius < 1 and radius > minr:
+                text = ("%.1f" % (1/radius))
+                ax.text(x-(minr/2), y, text)
     plt.show()
 
 
