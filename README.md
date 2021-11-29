@@ -11,6 +11,8 @@ Apollonian Gasket
 
 ![rainbow gasket picture](rainbow.png)
 
+![gasket picture with nums](nums.png)
+
 - assumes circle #1 has radius=1 and contains all other 
 circles (i.e., has a *negative* curvature or bend)
 - assumes circles #2 and #3 both have y=0
