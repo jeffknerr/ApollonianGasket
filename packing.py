@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 """
 circle packing...
 
@@ -11,22 +13,17 @@ import matplotlib.pyplot as plt
 import mycircles
 import random
 import math
+import click
 
-
-def main():
+@click.command()
+@click.option("--n", default=1000,
+              help="number of circles")
+@click.option("--maxr", default=.5,
+              help="max radius")
+def main(n, maxr):
     """the main function"""
     circles = []
-    N = 10000
-    maxr = .5
-    # N = ...
-    # max radius = ...
-    # for i in range(N)
-    #   pick random point
-    #   make sure it's not in a circle already
-    #   "create" small circle
-    #   while small circle doesn't touch/intersect with any others
-    #      make it bigger, up to a max radius
-    #   draw the "circle" using random nums and AG
+    N = n
     x = 2*random.random() - 1
     y = 2*random.random() - 1
     r = random.random() * maxr
